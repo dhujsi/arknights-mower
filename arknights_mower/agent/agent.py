@@ -4,7 +4,6 @@ import re
 from typing import Optional
 
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage, ToolMessage
-from langchain_openai import ChatOpenAI
 
 try:
     from langgraph.graph import END, MessageGraph
@@ -12,6 +11,7 @@ except ImportError:
     END = "__end__"
     MessageGraph = None
 
+from arknights_mower.agent.llm_config import build_chat_openai
 from arknights_mower.agent.missed_order import (
     format_missed_order_list,
     summarize_missed_order_result,
@@ -33,11 +33,6 @@ from arknights_mower.agent.tools.get_source_snippet import (
 from arknights_mower.agent.tools.submit_issue import submit_issue, submit_issue_tool_def
 from arknights_mower.utils import config
 from arknights_mower.utils.log import logger
-
-model_name_map = {
-    "deepseek": ["deepseek-chat", "https://api.deepseek.com/v1"],
-    "deepseek_reasoner": ["deepseek-reasoner", "https://api.deepseek.com/v1"],
-}
 
 MISS_STATE_MARKER = "MOWER_MISS_STATE"
 MISS_CONFIRM_WORDS = ("要", "启用", "分析", "查", "是", "好的", "好", "ok", "yes")
@@ -75,12 +70,7 @@ tool_message_map = {
 
 
 def build_llm(api_key, with_tools=False):
-    llm = ChatOpenAI(
-        model=model_name_map[config.conf.ai_type][0],
-        base_url=model_name_map[config.conf.ai_type][1],
-        api_key=api_key,
-        temperature=0,
-    )
+    llm = build_chat_openai(api_key=api_key, temperature=0)
     if with_tools:
         return llm.bind_tools(tools=get_tools())
     return llm

@@ -62,6 +62,8 @@ export const useConfigStore = defineStore('config', () => {
   const mail_subject = ref('')
   const ai_type = ref('')
   const ai_key = ref('')
+  const ai_base_url = ref('')
+  const ai_model = ref('')
   const skland_enable = ref(false)
   const skland_info = ref([])
   const recruit_enable = ref(true)
@@ -285,6 +287,8 @@ export const useConfigStore = defineStore('config', () => {
     skland_enable.value = response.data.skland_enable != 0
     ai_key.value = response.data.ai_key
     ai_type.value = response.data.ai_type
+    ai_base_url.value = response.data.ai_base_url || ''
+    ai_model.value = response.data.ai_model || ''
     skland_info.value = response.data.skland_info
     recruit_enable.value = response.data.recruit_enable
     recruitment_permit.value = response.data.recruitment_permit
@@ -383,6 +387,8 @@ export const useConfigStore = defineStore('config', () => {
       skland_enable: skland_enable.value,
       ai_type: ai_type.value,
       ai_key: ai_key.value,
+      ai_base_url: ai_base_url.value,
+      ai_model: ai_model.value,
       skland_info: skland_info.value,
       recruit_enable: recruit_enable.value,
       recruitment_permit: recruitment_permit.value,
@@ -521,6 +527,8 @@ export const useConfigStore = defineStore('config', () => {
     skland_enable,
     ai_type,
     ai_key,
+    ai_base_url,
+    ai_model,
     skland_info,
     run_order_grandet_mode,
     check_mail_enable,
